@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda</title>
+  <link rel="stylesheet" href="styles.css">
+  
+</head>
+<body>
+    <div class="container">
+
+        <h1>Agenda</h1>
+        <div class="form-search-datos">
+            <form id="agenda-form">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" required>
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" required>
+                <label for="cuit">CUIT:</label>
+                <input type="number" id="cuit" required>
+                <label for="condicion-iva">Condición IVA:</label>
+                <select id="condicion-iva" required>
+                <option value="">Selecciona una opción</option>
+                <option value="Monotributo">Monotributo</option>
+                <option value="Responsable Inscripto">Responsable Inscripto</option>
+                <option value="IVA Exento">IVA Exento</option>
+                <option value="Consumidor Final">Consumidor Final</option>
+                </select>
+                <button type="submit">Agregar</button>
+            </form>
+
+            <input type="text" id="search-input" placeholder="Buscar...">
+
+            <table id="agenda-table">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>CUIT</th>
+                    <th>Condición IVA</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="agenda-body"></tbody>
+            </table>
+        </div> <!-- form-search-datos -->    
+    </div> <!-- container -->
+
+  <script src="script.js"></script>
+</body>
+</html>
