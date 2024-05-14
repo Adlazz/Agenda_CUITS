@@ -104,7 +104,10 @@ button:active {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1rem;
+    font-size: 1.6rem; /* Ajusta el tamaño según tu preferencia */
+
 }
+
 
 #agenda-table th,
 #agenda-table td {
