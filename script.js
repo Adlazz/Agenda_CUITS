@@ -123,15 +123,64 @@ document.addEventListener('DOMContentLoaded', function() {
         const nuevoCuit = cuitInput.value;
         const nuevaCondicionIva = condicionIvaInput.value;
     
-        // Actualizar los valores de la fila con los nuevos valores de los inputs
-        row.querySelector('td:nth-child(1)').textContent = nuevoNombre;
-        row.querySelector('td:nth-child(2)').textContent = nuevoApellido;
-        row.querySelector('td:nth-child(3)').textContent = nuevoCuit;
-        row.querySelector('td:nth-child(4)').textContent = nuevaCondicionIva;
+        // Restaurar el estado original si algún campo está vacío
+        if (nuevoNombre === '' || nuevoApellido === '' || nuevoCuit === '' || nuevaCondicionIva === '') {
+            row.querySelector('td:nth-child(1)').textContent = originalData.nombre;
+            row.querySelector('td:nth-child(2)').textContent = originalData.apellido;
+            row.querySelector('td:nth-child(3)').textContent = originalData.cuit;
+            row.querySelector('td:nth-child(4)').textContent = originalData.condicionIva;
+        } else {
+            // Actualizar los valores de la fila con los nuevos valores de los inputs
+            row.querySelector('td:nth-child(1)').textContent = nuevoNombre;
+            row.querySelector('td:nth-child(2)').textContent = nuevoApellido;
+            row.querySelector('td:nth-child(3)').textContent = nuevoCuit;
+            row.querySelector('td:nth-child(4)').textContent = nuevaCondicionIva;
+        }
+    
+        // Restaurar el estado original de la fila (editar, borrar y copiar)
+        row.querySelector('td:nth-child(5)').innerHTML = `
+            <button class="edit-btn">Editar</button>
+            <button class="delete-btn">Borrar</button>
+            <button class="copy-btn">Copiar CUIT</button>
+        `;
+    
+        // Volver a asignar eventos a los botones de edición, borrado y copia
+        const editBtn = row.querySelector('.edit-btn');
+        const deleteBtn = row.querySelector('.delete-btn');
+        const copyBtn = row.querySelector('.copy-btn');
+    
+        // Agregar eventos de clic a los botones de edición, eliminación y copia
+        editBtn.addEventListener('click', function() {
+            // Lógica de edición...
+            // Por ejemplo, podrías volver a mostrar los inputs para editar los datos aquí
+        });
+    
+        deleteBtn.addEventListener('click', function() {
+            // Lógica de borrado...
+            deleteBtn.addEventListener('click', function() {
+              // Obtener la fila actual
+              const row = deleteBtn.closest('tr');
+        
+              // Eliminar la fila del DOM
+              row.remove();
+        
+              // Guardar los cambios en el almacenamiento local
+              saveAgenda();
+            });
+        });
+    
+        copyBtn.addEventListener('click', function() {
+            // Lógica de copia...
+            copyBtn.addEventListener('click', function() {
+              // Lógica para copiar el CUIT al portapapeles
+              const cuitText = row.querySelector('td:nth-child(3)').innerText;
+              copyToClipboard(cuitText);
+            });
+        });
     
         // Guardar los cambios en el almacenamiento local
         saveAgenda();
-      });
+    });
     });
     
 

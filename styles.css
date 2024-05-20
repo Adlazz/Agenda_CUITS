@@ -107,6 +107,11 @@ button:active {
     font-size: 1.6rem; /* Ajusta el tamaño según tu preferencia */
 
 }
+/* Estilo para redondear las esquinas externas de la tabla */
+#agenda-table,
+#agenda-table thead {
+    border-radius: 20px 20px 20px 20px; /* Redondear las esquinas superiores */
+}
 
 
 #agenda-table th,
@@ -126,6 +131,8 @@ button:active {
 #agenda-table td {
     color: white;
 }
+
+
 
 /* Botones de Acciones */
 .edit-btn,
