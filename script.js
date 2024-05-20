@@ -62,146 +62,111 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     agendaBody.appendChild(row);
 
-    // Agregar eventos de clic a los botones de edición, eliminación y copia
+    // Asignar eventos a los botones de la nueva fila
+    assignRowEvents(row);
+  }
+
+  // Función para asignar eventos a los botones de una fila
+  function assignRowEvents(row) {
     const editBtn = row.querySelector('.edit-btn');
     const deleteBtn = row.querySelector('.delete-btn');
     const copyBtn = row.querySelector('.copy-btn');
 
-    editBtn.addEventListener('click', function() {
-      // Obtener la fila actual
-      const row = editBtn.closest('tr');
-    
-      // Obtener los datos de la fila actual
-      const nombre = row.querySelector('td:nth-child(1)').textContent;
-      const apellido = row.querySelector('td:nth-child(2)').textContent;
-      const cuit = row.querySelector('td:nth-child(3)').textContent;
-      const condicionIva = row.querySelector('td:nth-child(4)').textContent;
-    
-      // Crear inputs para editar los datos
-      const nombreInput = document.createElement('input');
-      nombreInput.value = nombre;
-    
-      const apellidoInput = document.createElement('input');
-      apellidoInput.value = apellido;
-    
-      const cuitInput = document.createElement('input');
-      cuitInput.value = cuit;
-    
-      const condicionIvaInput = document.createElement('select');
-      const options = ['Monotributo', 'Responsable Inscripto', 'IVA Exento', 'Consumidor Final'];
-      options.forEach(option => {
-        const optionElement = document.createElement('option');
-        optionElement.value = option;
-        optionElement.textContent = option;
-        if (option === condicionIva) {
-          optionElement.selected = true;
-        }
-        condicionIvaInput.appendChild(optionElement);
-      });
-    
-      // Crear botón para confirmar los cambios
-      const confirmBtn = document.createElement('button');
-      confirmBtn.textContent = 'Confirmar';
-    
-      // Agregar inputs y botón de confirmar a las celdas de la fila
-      row.querySelector('td:nth-child(1)').textContent = '';
-      row.querySelector('td:nth-child(1)').appendChild(nombreInput);
-      row.querySelector('td:nth-child(2)').textContent = '';
-      row.querySelector('td:nth-child(2)').appendChild(apellidoInput);
-      row.querySelector('td:nth-child(3)').textContent = '';
-      row.querySelector('td:nth-child(3)').appendChild(cuitInput);
-      row.querySelector('td:nth-child(4)').textContent = '';
-      row.querySelector('td:nth-child(4)').appendChild(condicionIvaInput);
-      row.querySelector('td:nth-child(5)').textContent = '';
-      row.querySelector('td:nth-child(5)').appendChild(confirmBtn);
-    
-      // Agregar evento de clic al botón de confirmar cambios
-      confirmBtn.addEventListener('click', function() {
-        // Obtener los nuevos valores de los inputs
-        const nuevoNombre = nombreInput.value;
-        const nuevoApellido = apellidoInput.value;
-        const nuevoCuit = cuitInput.value;
-        const nuevaCondicionIva = condicionIvaInput.value;
-    
-        // Restaurar el estado original si algún campo está vacío
-        if (nuevoNombre === '' || nuevoApellido === '' || nuevoCuit === '' || nuevaCondicionIva === '') {
-            row.querySelector('td:nth-child(1)').textContent = originalData.nombre;
-            row.querySelector('td:nth-child(2)').textContent = originalData.apellido;
-            row.querySelector('td:nth-child(3)').textContent = originalData.cuit;
-            row.querySelector('td:nth-child(4)').textContent = originalData.condicionIva;
-        } else {
-            // Actualizar los valores de la fila con los nuevos valores de los inputs
-            row.querySelector('td:nth-child(1)').textContent = nuevoNombre;
-            row.querySelector('td:nth-child(2)').textContent = nuevoApellido;
-            row.querySelector('td:nth-child(3)').textContent = nuevoCuit;
-            row.querySelector('td:nth-child(4)').textContent = nuevaCondicionIva;
-        }
-    
-        // Restaurar el estado original de la fila (editar, borrar y copiar)
-        row.querySelector('td:nth-child(5)').innerHTML = `
-            <button class="edit-btn">Editar</button>
-            <button class="delete-btn">Borrar</button>
-            <button class="copy-btn">Copiar CUIT</button>
-        `;
-    
-        // Volver a asignar eventos a los botones de edición, borrado y copia
-        const editBtn = row.querySelector('.edit-btn');
-        const deleteBtn = row.querySelector('.delete-btn');
-        const copyBtn = row.querySelector('.copy-btn');
-    
-        // Agregar eventos de clic a los botones de edición, eliminación y copia
-        editBtn.addEventListener('click', function() {
-            // Lógica de edición...
-            // Por ejemplo, podrías volver a mostrar los inputs para editar los datos aquí
-        });
-    
-        deleteBtn.addEventListener('click', function() {
-            // Lógica de borrado...
-            deleteBtn.addEventListener('click', function() {
-              // Obtener la fila actual
-              const row = deleteBtn.closest('tr');
-        
-              // Eliminar la fila del DOM
-              row.remove();
-        
-              // Guardar los cambios en el almacenamiento local
-              saveAgenda();
-            });
-        });
-    
-        copyBtn.addEventListener('click', function() {
-            // Lógica de copia...
-            copyBtn.addEventListener('click', function() {
-              // Lógica para copiar el CUIT al portapapeles
-              const cuitText = row.querySelector('td:nth-child(3)').innerText;
-              copyToClipboard(cuitText);
-            });
-        });
-    
-        // Guardar los cambios en el almacenamiento local
-        saveAgenda();
+    editBtn.addEventListener('click', () => editRow(row));
+    deleteBtn.addEventListener('click', () => deleteRow(row));
+    copyBtn.addEventListener('click', () => copyCuit(row));
+  }
+
+  // Función de edición
+  function editRow(row) {
+    const nombreCell = row.querySelector('td:nth-child(1)');
+    const apellidoCell = row.querySelector('td:nth-child(2)');
+    const cuitCell = row.querySelector('td:nth-child(3)');
+    const condicionIvaCell = row.querySelector('td:nth-child(4)');
+    const actionsCell = row.querySelector('td:nth-child(5)');
+
+    const originalData = {
+      nombre: nombreCell.textContent,
+      apellido: apellidoCell.textContent,
+      cuit: cuitCell.textContent,
+      condicionIva: condicionIvaCell.textContent
+    };
+
+    nombreCell.innerHTML = `<input type="text" value="${originalData.nombre}">`;
+    apellidoCell.innerHTML = `<input type="text" value="${originalData.apellido}">`;
+    cuitCell.innerHTML = `<input type="text" value="${originalData.cuit}">`;
+
+    const condicionIvaInput = document.createElement('select');
+    const options = ['Monotributo', 'Responsable Inscripto', 'IVA Exento', 'Consumidor Final'];
+    options.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option;
+      optionElement.textContent = option;
+      if (option === originalData.condicionIva) {
+        optionElement.selected = true;
+      }
+      condicionIvaInput.appendChild(optionElement);
     });
-    });
-    
+    condicionIvaCell.innerHTML = '';
+    condicionIvaCell.appendChild(condicionIvaInput);
 
-    deleteBtn.addEventListener('click', function() {
-      // Obtener la fila actual
-      const row = deleteBtn.closest('tr');
+    const confirmBtn = document.createElement('button');
+    confirmBtn.textContent = 'Confirmar';
+    actionsCell.innerHTML = '';
+    actionsCell.appendChild(confirmBtn);
 
-      // Eliminar la fila del DOM
-      row.remove();
+    confirmBtn.addEventListener('click', function() {
+      const nuevoNombre = nombreCell.querySelector('input').value;
+      const nuevoApellido = apellidoCell.querySelector('input').value;
+      const nuevoCuit = cuitCell.querySelector('input').value;
+      const nuevaCondicionIva = condicionIvaInput.value;
 
-      // Guardar los cambios en el almacenamiento local
+      if (nuevoNombre === '' || nuevoApellido === '' || nuevoCuit === '' || nuevaCondicionIva === '') {
+        nombreCell.textContent = originalData.nombre;
+        apellidoCell.textContent = originalData.apellido;
+        cuitCell.textContent = originalData.cuit;
+        condicionIvaCell.textContent = originalData.condicionIva;
+      } else {
+        nombreCell.textContent = nuevoNombre;
+        apellidoCell.textContent = nuevoApellido;
+        cuitCell.textContent = nuevoCuit;
+        condicionIvaCell.textContent = nuevaCondicionIva;
+      }
+
+      actionsCell.innerHTML = `
+        <button class="edit-btn">Editar</button>
+        <button class="delete-btn">Borrar</button>
+        <button class="copy-btn">Copiar CUIT</button>
+      `;
+
+      assignRowEvents(row);
       saveAgenda();
-    });
-
-    copyBtn.addEventListener('click', function() {
-      // Lógica para copiar el CUIT al portapapeles
-      const cuitText = row.querySelector('td:nth-child(3)').innerText;
-      copyToClipboard(cuitText);
     });
   }
 
+  // Función de borrado
+  function deleteRow(row) {
+    row.remove();
+    saveAgenda();
+  }
+
+  // Función de copia
+  function copyCuit(row) {
+    const cuitText = row.querySelector('td:nth-child(3)').innerText;
+    copyToClipboard(cuitText);
+  }
+
+  // Función para copiar al portapapeles
+  function copyToClipboard(text) {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+  }
+
+  // Función para guardar la agenda
   function saveAgenda() {
     const rows = agendaBody.querySelectorAll('tr');
     const agendaData = [];
@@ -218,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('agendaData', JSON.stringify(agendaData));
   }
 
+  // Función para cargar la agenda desde el almacenamiento local
   function loadAgenda() {
     const agendaData = JSON.parse(localStorage.getItem('agendaData'));
     if (agendaData) {
@@ -227,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Función para filtrar la tabla según el término de búsqueda
   function filterTable(searchTerm) {
     const rows = agendaBody.querySelectorAll('tr');
     rows.forEach(row => {
@@ -245,12 +212,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  function copyToClipboard(text) {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-  }
+  // Asignar eventos a todas las filas existentes al cargar la página
+  const rows = agendaBody.querySelectorAll('tr');
+  rows.forEach(row => {
+    assignRowEvents(row);
+  });
 });
