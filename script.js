@@ -1,11 +1,28 @@
+// script.js
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('agenda-form');
+  const formContainer = document.getElementById('form-container');
+  const toggleFormBtn = document.getElementById('toggle-form-btn');
   const nombreInput = document.getElementById('nombre');
   const apellidoInput = document.getElementById('apellido');
   const cuitInput = document.getElementById('cuit');
   const condicionIvaInput = document.getElementById('condicion-iva');
   const agendaBody = document.getElementById('agenda-body');
   const searchInput = document.getElementById('search-input');
+
+  // Inicialmente ocultar el formulario
+  formContainer.classList.add('hidden');
+
+  // Evento para mostrar/ocultar el formulario
+  toggleFormBtn.addEventListener('click', function() {
+    formContainer.classList.toggle('hidden');
+    if (formContainer.classList.contains('hidden')) {
+      toggleFormBtn.textContent = 'Agregar Nuevo Contacto';
+    } else {
+      toggleFormBtn.textContent = 'Ocultar Formulario';
+    }
+  });
 
   // Cargar datos almacenados en localStorage al cargar la página
   loadAgenda();
@@ -40,6 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
     apellidoInput.value = '';
     cuitInput.value = '';
     condicionIvaInput.value = '';
+
+    // Ocultar el formulario después de agregar un nuevo contacto
+    formContainer.classList.add('hidden');
+    toggleFormBtn.textContent = 'Agregar Nuevo Contacto';
   });
 
   // Agregar evento de entrada al campo de búsqueda

@@ -157,3 +157,12 @@ button:active {
 .delete-btn:active {
     background-color: rgba(0, 0, 0, 0.9);
 }
+
+.hidden {
+    display: none;
+}
+
+/* Añadir margen inferior al botón */
+#toggle-form-btn {
+    margin-bottom: 20px; /* Ajusta este valor según sea necesario */
+}
